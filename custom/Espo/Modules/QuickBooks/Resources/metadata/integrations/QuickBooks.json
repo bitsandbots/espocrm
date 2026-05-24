@@ -22,6 +22,10 @@
         "lastSyncAt": {
             "type": "datetime",
             "readOnly": true
+        },
+        "defaultItemId": {
+            "type": "varchar",
+            "maxLength": 64
         }
     },
     "allowUserAccounts": false,

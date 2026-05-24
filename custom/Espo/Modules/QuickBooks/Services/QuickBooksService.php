@@ -308,10 +308,12 @@ class QuickBooksService
             );
         }
 
+        $defaultItemId = $this->getIntegration()->get('defaultItemId') ?: null;
+
         $payload = [
             'CustomerRef' => ['value' => $qbCustomerId],
             'DueDate' => $invoice->get('dueDate'),
-            'Line' => $this->buildLineItems($invoice),
+            'Line' => $this->buildLineItems($invoice, $defaultItemId),
         ];
 
         return $payload;
@@ -320,20 +322,26 @@ class QuickBooksService
     /**
      * @return list<array<string, mixed>>
      */
-    private function buildLineItems(Entity $invoice): array
+    private function buildLineItems(Entity $invoice, ?string $defaultItemId = null): array
     {
         $lineItems = $invoice->get('lineItems');
 
         if (empty($lineItems) || !is_array($lineItems)) {
             $amount = (float) ($invoice->get('amount') ?? 0);
 
+            $detail = [
+                'UnitPrice' => $amount,
+                'Qty' => 1.0,
+            ];
+
+            if ($defaultItemId !== null) {
+                $detail['ItemRef'] = ['value' => $defaultItemId];
+            }
+
             return [[
                 'Amount' => $amount,
                 'DetailType' => 'SalesItemLineDetail',
-                'SalesItemLineDetail' => [
-                    'UnitPrice' => $amount,
-                    'Qty' => 1.0,
-                ],
+                'SalesItemLineDetail' => $detail,
             ]];
         }
 
@@ -352,8 +360,10 @@ class QuickBooksService
                 'Description' => $item['description'] ?? '',
             ];
 
-            if (!empty($item['qbItemId'])) {
-                $line['SalesItemLineDetail']['ItemRef'] = ['value' => $item['qbItemId']];
+            $itemId = !empty($item['qbItemId']) ? $item['qbItemId'] : $defaultItemId;
+
+            if ($itemId !== null) {
+                $line['SalesItemLineDetail']['ItemRef'] = ['value' => $itemId];
             }
 
             $lines[] = $line;

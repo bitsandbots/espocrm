@@ -107,6 +107,69 @@ class QuickBooksServiceFieldMappingTest extends TestCase
         $this->assertCount(1, $lines);
         $this->assertSame(150.0, $lines[0]['Amount']);
         $this->assertSame(1.0, $lines[0]['SalesItemLineDetail']['Qty']);
+        $this->assertArrayNotHasKey('ItemRef', $lines[0]['SalesItemLineDetail']);
+    }
+
+    public function testBuildLineItemsUsesPerItemQbItemId(): void
+    {
+        $lineItems = [
+            ['description' => 'Consulting', 'quantity' => 1, 'unitPrice' => 100.0, 'qbItemId' => '42'],
+        ];
+
+        $invoice = $this->createMock(Entity::class);
+        $invoice->method('get')->willReturnMap([
+            ['lineItems', $lineItems],
+        ]);
+
+        $lines = $this->invokeMethod('buildLineItems', [$invoice, '99']);
+
+        $this->assertSame('42', $lines[0]['SalesItemLineDetail']['ItemRef']['value']);
+    }
+
+    public function testBuildLineItemsFallsBackToDefaultItemId(): void
+    {
+        $lineItems = [
+            ['description' => 'Consulting', 'quantity' => 1, 'unitPrice' => 100.0],
+        ];
+
+        $invoice = $this->createMock(Entity::class);
+        $invoice->method('get')->willReturnMap([
+            ['lineItems', $lineItems],
+        ]);
+
+        $lines = $this->invokeMethod('buildLineItems', [$invoice, '99']);
+
+        $this->assertSame('99', $lines[0]['SalesItemLineDetail']['ItemRef']['value']);
+    }
+
+    public function testBuildLineItemsNoItemRefWhenNeitherSet(): void
+    {
+        $lineItems = [
+            ['description' => 'Consulting', 'quantity' => 1, 'unitPrice' => 100.0],
+        ];
+
+        $invoice = $this->createMock(Entity::class);
+        $invoice->method('get')->willReturnMap([
+            ['lineItems', $lineItems],
+        ]);
+
+        $lines = $this->invokeMethod('buildLineItems', [$invoice]);
+
+        $this->assertArrayNotHasKey('ItemRef', $lines[0]['SalesItemLineDetail']);
+    }
+
+    public function testBuildLineItemsFallbackAmountUsesDefaultItemId(): void
+    {
+        $invoice = $this->createMock(Entity::class);
+        $invoice->method('get')->willReturnMap([
+            ['lineItems', []],
+            ['amount', 200.0],
+        ]);
+
+        $lines = $this->invokeMethod('buildLineItems', [$invoice, '7']);
+
+        $this->assertCount(1, $lines);
+        $this->assertSame('7', $lines[0]['SalesItemLineDetail']['ItemRef']['value']);
     }
 
     /**
