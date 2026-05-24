@@ -4,7 +4,7 @@
             {
                 "name": "quickBooks",
                 "label": "QuickBooks",
-                "view": "custom/views/panels/quick-books-status",
+                "view": "quick-books:views/panels/quick-books-status",
                 "order": 10
             }
         ],
@@ -12,7 +12,7 @@
             {
                 "name": "quickBooks",
                 "label": "QuickBooks",
-                "view": "custom/views/panels/quick-books-status",
+                "view": "quick-books:views/panels/quick-books-status",
                 "order": 10
             }
         ]

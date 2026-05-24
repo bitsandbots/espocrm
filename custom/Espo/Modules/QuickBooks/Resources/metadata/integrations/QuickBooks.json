@@ -38,5 +38,5 @@
         }
     },
     "allowUserAccounts": false,
-    "view": "custom/views/admin/integrations/quick-books"
+    "view": "quick-books:views/admin/integrations/quick-books"
 }
