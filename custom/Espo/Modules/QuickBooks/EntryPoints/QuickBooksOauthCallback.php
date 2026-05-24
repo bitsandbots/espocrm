@@ -99,7 +99,7 @@ class QuickBooksOauthCallback implements EntryPoint
      * @return array<string, mixed>
      * @throws Error
      */
-    private function exchangeCodeForTokens(Integration $integration, string $code, string $realmId): array
+    protected function exchangeCodeForTokens(Integration $integration, string $code, string $realmId): array
     {
         $clientId = $integration->get('clientId');
         $clientSecret = $integration->get('clientSecret');
