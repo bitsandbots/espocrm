@@ -31,6 +31,10 @@
             "type": "varchar",
             "maxLength": 64,
             "notStorable": false
+        },
+        "lastSyncError": {
+            "type": "text",
+            "readOnly": true
         }
     },
     "allowUserAccounts": false,

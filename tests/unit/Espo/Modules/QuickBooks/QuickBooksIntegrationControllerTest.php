@@ -5,6 +5,7 @@ namespace tests\unit\Espo\Modules\QuickBooks;
 use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\InjectableFactory;
 use Espo\Entities\Integration;
 use Espo\Entities\User;
 use Espo\Modules\QuickBooks\Controllers\QuickBooksIntegration;
@@ -14,12 +15,14 @@ use PHPUnit\Framework\TestCase;
 class QuickBooksIntegrationControllerTest extends TestCase
 {
     private EntityManager $em;
+    private InjectableFactory $injectableFactory;
     private User $user;
     private Request $request;
 
     protected function setUp(): void
     {
         $this->em = $this->createMock(EntityManager::class);
+        $this->injectableFactory = $this->createMock(InjectableFactory::class);
         $this->user = $this->createMock(User::class);
         $this->request = $this->createMock(Request::class);
     }
@@ -30,7 +33,7 @@ class QuickBooksIntegrationControllerTest extends TestCase
 
         $this->expectException(Forbidden::class);
 
-        new QuickBooksIntegration($this->em, $this->user);
+        new QuickBooksIntegration($this->em, $this->injectableFactory, $this->user);
     }
 
     public function testReturnsStateWithCorrectFormat(): void
@@ -44,7 +47,7 @@ class QuickBooksIntegrationControllerTest extends TestCase
             ->with(Integration::ENTITY_TYPE, 'QuickBooks')
             ->willReturn($integration);
 
-        $controller = new QuickBooksIntegration($this->em, $this->user);
+        $controller = new QuickBooksIntegration($this->em, $this->injectableFactory, $this->user);
         $result = $controller->postActionInitOAuth($this->request);
 
         $this->assertObjectHasProperty('state', $result);
@@ -73,7 +76,7 @@ class QuickBooksIntegrationControllerTest extends TestCase
             ->method('saveEntity')
             ->with($integration);
 
-        $controller = new QuickBooksIntegration($this->em, $this->user);
+        $controller = new QuickBooksIntegration($this->em, $this->injectableFactory, $this->user);
         $controller->postActionInitOAuth($this->request);
     }
 
@@ -97,7 +100,7 @@ class QuickBooksIntegrationControllerTest extends TestCase
                 return $integration;
             });
 
-        $controller = new QuickBooksIntegration($this->em, $this->user);
+        $controller = new QuickBooksIntegration($this->em, $this->injectableFactory, $this->user);
         $result = $controller->postActionInitOAuth($this->request);
 
         $this->assertSame($storedState, $result->state);
@@ -112,7 +115,7 @@ class QuickBooksIntegrationControllerTest extends TestCase
             ->with(Integration::ENTITY_TYPE, 'QuickBooks')
             ->willReturn(null);
 
-        $controller = new QuickBooksIntegration($this->em, $this->user);
+        $controller = new QuickBooksIntegration($this->em, $this->injectableFactory, $this->user);
 
         $this->expectException(Error::class);
 

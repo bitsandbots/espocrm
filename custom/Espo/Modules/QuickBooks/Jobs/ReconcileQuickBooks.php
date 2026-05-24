@@ -4,15 +4,11 @@ namespace Espo\Modules\QuickBooks\Jobs;
 
 use Espo\Core\InjectableFactory;
 use Espo\Core\Job\JobDataLess;
-use Espo\Core\Utils\DateTime as DateTimeUtil;
-use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Log;
 use Espo\Entities\Integration;
 use Espo\Modules\QuickBooks\Services\QuickBooksService;
-use Espo\Modules\QuickBooks\Tools\ConflictResolver;
 use Espo\ORM\EntityManager;
 
-use DateTime;
 use Throwable;
 
 /**
@@ -40,23 +36,30 @@ class ReconcileQuickBooks implements JobDataLess
         }
 
         $service = $this->injectableFactory->create(QuickBooksService::class);
-        $resolver = $this->injectableFactory->create(ConflictResolver::class);
 
-        $this->reconcileAccounts($service);
-        $this->reconcileInvoices($service);
+        $errors = array_merge(
+            $this->reconcileAccounts($service),
+            $this->reconcileInvoices($service)
+        );
+
+        $integration->set('lastSyncError', empty($errors) ? null : implode('; ', $errors));
+        $this->entityManager->saveEntity($integration);
 
         $this->log->info("QuickBooks ReconcileQuickBooks completed.");
     }
 
-    private function reconcileAccounts(QuickBooksService $service): void
+    /**
+     * @return list<string>
+     */
+    private function reconcileAccounts(QuickBooksService $service): array
     {
         $collection = $this->entityManager
             ->getRDBRepository('Account')
-            ->where([
-                'qbCustomerId!=' => null,
-            ])
+            ->where(['qbCustomerId!=' => null])
             ->limit(0, self::BATCH_SIZE)
             ->find();
+
+        $errors = [];
 
         foreach ($collection as $account) {
             $syncedAt = $account->get('qbSyncedAt');
@@ -76,11 +79,17 @@ class ReconcileQuickBooks implements JobDataLess
                 $this->log->warning(
                     "QuickBooks reconcile Account '{$account->getId()}': " . $e->getMessage()
                 );
+                $errors[] = "Account {$account->getId()}: " . $e->getMessage();
             }
         }
+
+        return $errors;
     }
 
-    private function reconcileInvoices(QuickBooksService $service): void
+    /**
+     * @return list<string>
+     */
+    private function reconcileInvoices(QuickBooksService $service): array
     {
         $collection = $this->entityManager
             ->getRDBRepository('Invoice')
@@ -91,6 +100,8 @@ class ReconcileQuickBooks implements JobDataLess
             ])
             ->limit(0, self::BATCH_SIZE)
             ->find();
+
+        $errors = [];
 
         foreach ($collection as $invoice) {
             $syncedAt = $invoice->get('qbSyncedAt');
@@ -110,7 +121,10 @@ class ReconcileQuickBooks implements JobDataLess
                 $this->log->warning(
                     "QuickBooks reconcile Invoice '{$invoice->getId()}': " . $e->getMessage()
                 );
+                $errors[] = "Invoice {$invoice->getId()}: " . $e->getMessage();
             }
         }
+
+        return $errors;
     }
 }

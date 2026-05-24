@@ -29,15 +29,30 @@ class Sync implements AfterSave
             return;
         }
 
+        $service = $this->injectableFactory->create(QuickBooksService::class);
+
         if ($entity->get('status') === 'Voided') {
+            if (!$entity->get('qbInvoiceId')) {
+                return;
+            }
+
+            try {
+                $service->voidInvoice($entity);
+            } catch (Throwable $e) {
+                $this->log->warning(
+                    "QuickBooks Invoice void failed for '{$entity->getId()}': " . $e->getMessage()
+                );
+            }
+
             return;
         }
 
         try {
-            $service = $this->injectableFactory->create(QuickBooksService::class);
             $service->upsertInvoice($entity);
         } catch (Throwable $e) {
-            $this->log->warning("QuickBooks Invoice sync failed for '{$entity->getId()}': " . $e->getMessage());
+            $this->log->warning(
+                "QuickBooks Invoice sync failed for '{$entity->getId()}': " . $e->getMessage()
+            );
         }
     }
 }

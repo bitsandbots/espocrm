@@ -4,7 +4,8 @@
         "clientSecret": "Client Secret",
         "realmId": "Realm ID (Company)",
         "connectedAt": "Connected At",
-        "defaultItemId": "Default QB Item ID"
+        "defaultItemId": "Default QB Item ID",
+        "lastSyncError": "Last Sync Error"
     },
     "help": {
         "QuickBooks": "Create an app at https://developer.intuit.com to obtain your Client ID and Client Secret. Set the redirect URI to: {siteUrl}?entryPoint=QuickBooksOauthCallback. After saving credentials, use Admin → QuickBooks → Connect to authorize."

@@ -41,20 +41,25 @@ class SyncFromQuickBooks implements JobDataLess
             ? (new DateTime($lastSyncAt))->format('Y-m-d')
             : (new DateTime())->modify('-7 days')->format('Y-m-d');
 
+        $errors = [];
+
         try {
             $service->pullCustomersSince($sinceDate);
         } catch (Throwable $e) {
             $this->log->error("QuickBooks SyncFromQuickBooks (customers): " . $e->getMessage());
+            $errors[] = "Customers: " . $e->getMessage();
         }
 
         try {
             $service->pullPaymentsSince($sinceDate);
         } catch (Throwable $e) {
             $this->log->error("QuickBooks SyncFromQuickBooks (payments): " . $e->getMessage());
+            $errors[] = "Payments: " . $e->getMessage();
         }
 
         $now = (new DateTime())->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         $integration->set('lastSyncAt', $now);
+        $integration->set('lastSyncError', empty($errors) ? null : implode('; ', $errors));
 
         $this->entityManager->saveEntity($integration);
 

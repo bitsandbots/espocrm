@@ -5,8 +5,11 @@ namespace Espo\Modules\QuickBooks\Controllers;
 use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\InjectableFactory;
 use Espo\Entities\Integration;
 use Espo\Entities\User;
+use Espo\Modules\QuickBooks\Jobs\ReconcileQuickBooks;
+use Espo\Modules\QuickBooks\Jobs\SyncFromQuickBooks;
 use Espo\ORM\EntityManager;
 
 use stdClass;
@@ -15,6 +18,7 @@ class QuickBooksIntegration
 {
     public function __construct(
         private EntityManager $entityManager,
+        private InjectableFactory $injectableFactory,
         private User $user,
     ) {
         if (!$this->user->isAdmin()) {
@@ -47,6 +51,23 @@ class QuickBooksIntegration
 
         $result = new stdClass();
         $result->state = $state;
+
+        return $result;
+    }
+
+    /**
+     * Runs SyncFromQuickBooks then ReconcileQuickBooks synchronously.
+     * Suitable for on-demand use via the admin UI on small datasets.
+     *
+     * @throws Forbidden
+     */
+    public function postActionRunSync(Request $request): stdClass
+    {
+        $this->injectableFactory->create(SyncFromQuickBooks::class)->run();
+        $this->injectableFactory->create(ReconcileQuickBooks::class)->run();
+
+        $result = new stdClass();
+        $result->success = true;
 
         return $result;
     }

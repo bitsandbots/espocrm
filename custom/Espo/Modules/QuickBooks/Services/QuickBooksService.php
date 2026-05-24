@@ -138,7 +138,7 @@ class QuickBooksService
      * @return array<string, mixed>
      * @throws Error
      */
-    private function request(
+    protected function request(
         string $method,
         string $url,
         ?array $body = null
@@ -404,6 +404,31 @@ class QuickBooksService
         $invoice->set('qbSyncedAt', $now);
 
         $this->entityManager->saveEntity($invoice, ['skipQuickBooksSync' => true, 'silent' => true]);
+    }
+
+    /**
+     * Voids an Invoice in QuickBooks. No-ops if the invoice was never synced.
+     *
+     * @throws Error
+     */
+    public function voidInvoice(Entity $invoice): void
+    {
+        $qbId = $invoice->get('qbInvoiceId');
+        $syncToken = $invoice->get('qbInvoiceSyncToken');
+
+        if (!$qbId || $syncToken === null) {
+            return;
+        }
+
+        $url = $this->apiUrl('invoice') . '?operation=void&minorversion=65';
+
+        $this->request('POST', $url, [
+            'Invoice' => [
+                'Id' => $qbId,
+                'SyncToken' => $syncToken,
+                'sparse' => true,
+            ],
+        ]);
     }
 
     // -------------------------------------------------------------------------
