@@ -26,6 +26,11 @@
         "defaultItemId": {
             "type": "varchar",
             "maxLength": 64
+        },
+        "oauthState": {
+            "type": "varchar",
+            "maxLength": 64,
+            "notStorable": false
         }
     },
     "allowUserAccounts": false,

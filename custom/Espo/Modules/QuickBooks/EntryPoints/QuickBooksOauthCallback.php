@@ -67,7 +67,7 @@ class QuickBooksOauthCallback implements EntryPoint
 
             $storedState = $integration->get('oauthState');
 
-            if ($storedState && $state !== $storedState) {
+            if (!$storedState || $state !== $storedState) {
                 $this->renderResult($response, false, "Invalid OAuth state parameter.");
 
                 return;
@@ -140,6 +140,8 @@ class QuickBooksOauthCallback implements EntryPoint
     {
         $status = $success ? 'success' : 'error';
         $color = $success ? '#2b7de9' : '#c0392b';
+        $origin = rtrim($this->config->get('siteUrl') ?? '', '/');
+        $originJs = json_encode($origin);
 
         $html = <<<HTML
 <!DOCTYPE html>
@@ -149,7 +151,7 @@ class QuickBooksOauthCallback implements EntryPoint
   <p style="color:{$color};font-size:16px;">{$message}</p>
   <script>
     if (window.opener) {
-      window.opener.postMessage({name:'quickBooksOAuth',status:'{$status}'}, '*');
+      window.opener.postMessage({name:'quickBooksOAuth',status:'{$status}'}, {$originJs});
       setTimeout(function(){ window.close(); }, 1500);
     }
   </script>

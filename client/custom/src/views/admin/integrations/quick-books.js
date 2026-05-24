@@ -62,8 +62,14 @@ export default class QuickBooksIntegrationView extends IntegrationsEditView {
         }
 
         const siteUrl = (this.getConfig().get('siteUrl') ?? window.location.origin).replace(/\/$/, '');
+
+        Espo.Ajax.postRequest('QuickBooksIntegration/initOAuth', {})
+            .then(data => this.openOAuthPopup(clientId, siteUrl, data.state))
+            .catch(() => Espo.Ui.error('Could not initiate QuickBooks OAuth. Check server logs.'));
+    }
+
+    openOAuthPopup(clientId, siteUrl, state) {
         const redirectUri = `${siteUrl}?entryPoint=QuickBooksOauthCallback`;
-        const state = Math.random().toString(36).slice(2) + Date.now().toString(36);
 
         const authUrl =
             'https://appcenter.intuit.com/connect/oauth2' +
@@ -71,7 +77,7 @@ export default class QuickBooksIntegrationView extends IntegrationsEditView {
             '&scope=com.intuit.quickbooks.accounting' +
             '&redirect_uri=' + encodeURIComponent(redirectUri) +
             '&response_type=code' +
-            '&state=' + state;
+            '&state=' + encodeURIComponent(state);
 
         const popup = window.open(authUrl, 'qb-oauth', 'width=650,height=720,left=200,top=100');
 
@@ -81,6 +87,7 @@ export default class QuickBooksIntegrationView extends IntegrationsEditView {
         }
 
         const onMessage = (event) => {
+            if (event.origin !== siteUrl) return;
             if (!event.data || event.data.name !== 'quickBooksOAuth') return;
 
             window.removeEventListener('message', onMessage);
@@ -98,7 +105,6 @@ export default class QuickBooksIntegrationView extends IntegrationsEditView {
 
         window.addEventListener('message', onMessage);
 
-        // Clean up listener if popup closes without posting a message
         const pollClosed = setInterval(() => {
             if (popup.closed) {
                 clearInterval(pollClosed);
