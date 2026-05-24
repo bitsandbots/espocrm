@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "clientId": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 255
+        },
+        "clientSecret": {
+            "type": "password",
+            "required": true,
+            "maxLength": 255
+        },
+        "realmId": {
+            "type": "varchar",
+            "readOnly": true,
+            "maxLength": 64
+        },
+        "connectedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "lastSyncAt": {
+            "type": "datetime",
+            "readOnly": true
+        }
+    },
+    "allowUserAccounts": false,
+    "view": "custom/views/admin/integrations/quick-books"
+}
