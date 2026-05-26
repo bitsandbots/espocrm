@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# Package custom QuickBooks and Xero modules into a versioned ZIP archive.
+# Package the EspoCRM Xero module into a versioned ZIP archive.
 # Usage: ./scripts/release.sh [--version X.Y.Z]
 #
 # IMPORTANT: After running this script, make sure to execute 'chmod +x scripts/release.sh'
@@ -104,19 +104,15 @@ _blue "Staging files..."
 
 mkdir -p "$STAGING_DIR"
 
-# Copy server modules
-_green "  Staging server modules..."
+# Copy server module
+_green "  Staging server module..."
 mkdir -p "$STAGING_DIR/custom/Espo/Modules"
-cp -r "$PROJECT_ROOT/custom/Espo/Modules/QuickBooks" \
-  "$STAGING_DIR/custom/Espo/Modules/QuickBooks"
 cp -r "$PROJECT_ROOT/custom/Espo/Modules/Xero" \
   "$STAGING_DIR/custom/Espo/Modules/Xero"
 
-# Copy client modules
-_green "  Staging client modules..."
+# Copy client module
+_green "  Staging client module..."
 mkdir -p "$STAGING_DIR/client/custom/modules"
-cp -r "$PROJECT_ROOT/client/custom/modules/quick-books" \
-  "$STAGING_DIR/client/custom/modules/quick-books"
 cp -r "$PROJECT_ROOT/client/custom/modules/xero" \
   "$STAGING_DIR/client/custom/modules/xero"
 
@@ -155,7 +151,6 @@ _green "Files staged"
 _blue "Running tests..."
 
 if php vendor/bin/phpunit \
-  tests/unit/Espo/Modules/QuickBooks/ \
   tests/unit/Espo/Modules/Xero/ \
   --no-coverage 2>&1 | tee /tmp/phpunit-output.log; then
   _green "PHP tests passed"
@@ -184,7 +179,7 @@ fi
 
 _blue "Creating release archive..."
 
-ZIP_FILE="$RELEASES_DIR/espocrm-accounting-integrations-v${VERSION}.zip"
+ZIP_FILE="$RELEASES_DIR/espocrm-xero-v${VERSION}.zip"
 
 # Remove old zip if exists
 rm -f "$ZIP_FILE"

@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-# Install custom QuickBooks and Xero modules onto an existing EspoCRM instance.
-# Usage: ./scripts/install-modules.sh [--espo-path PATH] [--module QB|Xero|all]
+# Install the EspoCRM Xero module onto an existing EspoCRM instance.
+# Usage: ./scripts/install-modules.sh [--espo-path PATH]
 #
 # IMPORTANT: After running this script, make sure to execute 'chmod +x scripts/install-modules.sh'
 #            to ensure the script is executable.
@@ -33,16 +33,11 @@ _blue() {
 ##############################################################################
 
 ESPO_PATH="."
-MODULES="all"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --espo-path)
       ESPO_PATH="$2"
-      shift 2
-      ;;
-    --module)
-      MODULES="$2"
       shift 2
       ;;
     *)
@@ -79,20 +74,11 @@ if [[ "$CURRENT_USER" != "$CONFIG_OWNER" ]]; then
   _yellow "This may cause permission issues during module installation."
 fi
 
-# Validate module selection
-case "$MODULES" in
-  QB|Xero|all) ;;
-  *)
-    _red "ERROR: Invalid module selection. Use: QB, Xero, or all"
-    exit 1
-    ;;
-esac
-
 ##############################################################################
-# COPY MODULES
+# COPY MODULE
 ##############################################################################
 
-_blue "Installing modules..."
+_blue "Installing Xero module..."
 
 copy_module() {
   local src="$1"
@@ -114,29 +100,15 @@ copy_module() {
   cp -r "$src" "$dst"
 }
 
-if [[ "$MODULES" == "QB" || "$MODULES" == "all" ]]; then
-  copy_module \
-    "$ESPO_PATH/custom/Espo/Modules/QuickBooks" \
-    "$ESPO_PATH/custom/Espo/Modules/QuickBooks" \
-    "QuickBooks module" || exit 1
+copy_module \
+  "$ESPO_PATH/custom/Espo/Modules/Xero" \
+  "$ESPO_PATH/custom/Espo/Modules/Xero" \
+  "Xero module" || exit 1
 
-  copy_module \
-    "$ESPO_PATH/client/custom/modules/quick-books" \
-    "$ESPO_PATH/client/custom/modules/quick-books" \
-    "QuickBooks client module" || exit 1
-fi
-
-if [[ "$MODULES" == "Xero" || "$MODULES" == "all" ]]; then
-  copy_module \
-    "$ESPO_PATH/custom/Espo/Modules/Xero" \
-    "$ESPO_PATH/custom/Espo/Modules/Xero" \
-    "Xero module" || exit 1
-
-  copy_module \
-    "$ESPO_PATH/client/custom/modules/xero" \
-    "$ESPO_PATH/client/custom/modules/xero" \
-    "Xero client module" || exit 1
-fi
+copy_module \
+  "$ESPO_PATH/client/custom/modules/xero" \
+  "$ESPO_PATH/client/custom/modules/xero" \
+  "Xero client module" || exit 1
 
 ##############################################################################
 # REBUILD & CACHE CLEAR
@@ -167,13 +139,10 @@ echo "1. Configure cron job (as root or with sudo):"
 _yellow "   * * * * * $CONFIG_OWNER php $ESPO_PATH/cron.php > /dev/null 2>&1"
 echo ""
 echo "2. Configure credentials:"
-_yellow "   Go to Admin > Integrations > QuickBooks"
 _yellow "   Go to Admin > Integrations > Xero"
 echo ""
 echo "3. Enable scheduled jobs:"
 _yellow "   Go to Admin > Scheduled Jobs and enable:"
-echo "     - SyncFromQuickBooks"
-echo "     - ReconcileQuickBooks"
 echo "     - SyncFromXero"
 echo "     - ReconcileXero"
 echo ""
