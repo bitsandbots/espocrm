@@ -70,7 +70,7 @@ done
 # Get version from git tag, or use dev version
 if [[ -z "$VERSION" ]]; then
   if git describe --tags --abbrev=0 &>/dev/null; then
-    VERSION=$(git describe --tags --abbrev=0)
+    VERSION=$(git describe --tags --abbrev=0 | sed 's/^v//')
   else
     VERSION="0.0.0-dev"
   fi
