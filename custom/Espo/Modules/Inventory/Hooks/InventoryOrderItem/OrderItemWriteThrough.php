@@ -13,7 +13,7 @@ use Throwable;
 /**
  * @implements AfterSave<\Espo\ORM\Entity>
  */
-class AfterSave implements \Espo\Core\Hook\Hook\AfterSave
+class OrderItemWriteThrough implements AfterSave
 {
     public static int $order = 20;
 
@@ -52,7 +52,7 @@ class AfterSave implements \Espo\Core\Hook\Hook\AfterSave
             }
 
             if (!$ccOrderId || !$ccProductId) {
-                $this->log->warning("Inventory: InventoryOrderItem AfterSave — missing ccInventoryId on order or product.");
+                $this->log->warning("Inventory: OrderItemWriteThrough — missing ccInventoryId on order or product.");
                 return;
             }
 
@@ -82,7 +82,7 @@ class AfterSave implements \Espo\Core\Hook\Hook\AfterSave
             $db->commit();
         } catch (Throwable $e) {
             $db->rollBack();
-            $this->log->warning("Inventory: InventoryOrderItem write-through failed for '{$entity->getId()}': " . $e->getMessage());
+            $this->log->warning("Inventory: OrderItemWriteThrough failed for '{$entity->getId()}': " . $e->getMessage());
         }
     }
 }

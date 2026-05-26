@@ -16,7 +16,7 @@ use Throwable;
  *
  * @implements AfterSave<\Espo\ORM\Entity>
  */
-class AfterSave implements \Espo\Core\Hook\Hook\AfterSave
+class PoItemWriteThrough implements AfterSave
 {
     public static int $order = 20;
 
@@ -31,9 +31,9 @@ class AfterSave implements \Espo\Core\Hook\Hook\AfterSave
             return;
         }
 
-        $qtyReceived = (int) ($entity->get('qtyReceived') ?? 0);
+        $qtyReceived     = (int) ($entity->get('qtyReceived') ?? 0);
         $prevQtyReceived = (int) ($entity->getFetched('qtyReceived') ?? 0);
-        $delta = $qtyReceived - $prevQtyReceived;
+        $delta           = $qtyReceived - $prevQtyReceived;
 
         if ($delta <= 0) {
             return;
@@ -57,11 +57,11 @@ class AfterSave implements \Espo\Core\Hook\Hook\AfterSave
             }
 
             if (!$ccProductId || !$ccPoId) {
-                $this->log->warning("Inventory: InventoryPurchaseOrderItem AfterSave — missing ccInventoryId on product or PO.");
+                $this->log->warning("Inventory: PoItemWriteThrough — missing ccInventoryId on product or PO.");
                 return;
             }
 
-            $qtyOrdered = (int) ($entity->get('qtyOrdered') ?? 0);
+            $qtyOrdered  = (int) ($entity->get('qtyOrdered') ?? 0);
             $cappedDelta = min($delta, $qtyOrdered - $prevQtyReceived);
 
             if ($cappedDelta <= 0) {
@@ -72,9 +72,7 @@ class AfterSave implements \Espo\Core\Hook\Hook\AfterSave
 
             if ($ccPoItemId) {
                 $db->execute(
-                    "UPDATE purchase_order_items
-                     SET qty_received = qty_received + ?
-                     WHERE id = ?",
+                    "UPDATE purchase_order_items SET qty_received = qty_received + ? WHERE id = ?",
                     [$cappedDelta, $ccPoItemId]
                 );
             }
@@ -85,8 +83,7 @@ class AfterSave implements \Espo\Core\Hook\Hook\AfterSave
             );
 
             $db->execute(
-                "INSERT INTO stock (product_id, quantity, comments, date)
-                 VALUES (?, ?, ?, NOW())",
+                "INSERT INTO stock (product_id, quantity, comments, date) VALUES (?, ?, ?, NOW())",
                 [$ccProductId, $cappedDelta, "Received via PO #{$ccPoId} (EspoCRM)"]
             );
 
@@ -95,7 +92,7 @@ class AfterSave implements \Espo\Core\Hook\Hook\AfterSave
             $db->commit();
         } catch (Throwable $e) {
             $db->rollBack();
-            $this->log->warning("Inventory: InventoryPurchaseOrderItem write-through failed for '{$entity->getId()}': " . $e->getMessage());
+            $this->log->warning("Inventory: PoItemWriteThrough failed for '{$entity->getId()}': " . $e->getMessage());
         }
     }
 
@@ -114,13 +111,10 @@ class AfterSave implements \Espo\Core\Hook\Hook\AfterSave
         $anyReceived = false;
 
         foreach ($items as $item) {
-            $ordered  = (int) $item['qty_ordered'];
-            $received = (int) $item['qty_received'];
-
-            if ($received < $ordered) {
+            if ((int) $item['qty_received'] < (int) $item['qty_ordered']) {
                 $allReceived = false;
             }
-            if ($received > 0) {
+            if ((int) $item['qty_received'] > 0) {
                 $anyReceived = true;
             }
         }

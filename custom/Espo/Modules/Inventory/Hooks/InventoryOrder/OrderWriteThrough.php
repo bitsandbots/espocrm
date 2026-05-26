@@ -13,7 +13,7 @@ use Throwable;
 /**
  * @implements AfterSave<\Espo\ORM\Entity>
  */
-class AfterSave implements \Espo\Core\Hook\Hook\AfterSave
+class OrderWriteThrough implements AfterSave
 {
     public static int $order = 20;
 
@@ -31,7 +31,7 @@ class AfterSave implements \Espo\Core\Hook\Hook\AfterSave
         $db = $this->injectableFactory->create(CcInventoryDbService::class);
 
         try {
-            $ccId      = $entity->get('ccInventoryId');
+            $ccId       = $entity->get('ccInventoryId');
             $customerId = null;
 
             $customerLink = $entity->get('customer');
@@ -65,9 +65,6 @@ class AfterSave implements \Espo\Core\Hook\Hook\AfterSave
                      VALUES ('orders', 'create', ?, 'Created via EspoCRM', NOW())",
                     [$newCcId]
                 );
-
-                $saveOptions = SaveOptions::create()->withRaw(['skipInventorySync' => true]);
-                // Persist the new ccInventoryId back — handled by the ORM internally via $entity reference
             } else {
                 $db->execute(
                     "UPDATE orders SET customer = ?, customer_id = ?, status = ?,

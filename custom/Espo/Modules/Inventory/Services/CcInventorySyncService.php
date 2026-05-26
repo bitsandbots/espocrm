@@ -7,7 +7,6 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Log;
 use Espo\Entities\Integration;
 use Espo\ORM\EntityManager;
-use Espo\ORM\Repository\Option\SaveOptions;
 use Throwable;
 
 class CcInventorySyncService
@@ -334,9 +333,7 @@ class CcInventorySyncService
             $entity->set($field, $value);
         }
 
-        $saveOptions = SaveOptions::create()->withRaw(['skipInventorySync' => true]);
-
-        $this->entityManager->saveEntity($entity, $saveOptions);
+        $this->entityManager->saveEntity($entity, ['skipInventorySync' => true, 'silent' => true]);
         $this->syncCount++;
     }
 
@@ -378,8 +375,7 @@ class CcInventorySyncService
             }
         }
 
-        $saveOptions = SaveOptions::create()->withRaw(['skipInventorySync' => true]);
-        $this->entityManager->saveEntity($account, $saveOptions);
+        $this->entityManager->saveEntity($account, ['skipInventorySync' => true, 'silent' => true]);
         $this->syncCount++;
     }
 

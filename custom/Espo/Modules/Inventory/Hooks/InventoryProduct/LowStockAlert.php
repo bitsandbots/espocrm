@@ -15,7 +15,7 @@ use Throwable;
  *
  * @implements AfterSave<\Espo\ORM\Entity>
  */
-class AfterSave implements \Espo\Core\Hook\Hook\AfterSave
+class LowStockAlert implements AfterSave
 {
     public static int $order = 20;
 
@@ -45,7 +45,7 @@ class AfterSave implements \Espo\Core\Hook\Hook\AfterSave
         try {
             $this->createLowStockNotification($entity, $qty, $threshold);
         } catch (Throwable $e) {
-            $this->log->warning("Inventory: low-stock notification failed for '{$entity->getId()}': " . $e->getMessage());
+            $this->log->warning("Inventory: LowStockAlert failed for '{$entity->getId()}': " . $e->getMessage());
         }
     }
 
