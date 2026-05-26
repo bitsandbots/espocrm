@@ -78,31 +78,17 @@ export default class XeroIntegrationView extends IntegrationsEditView {
     }
 
     actionConnectXero() {
-        const clientId = this.model.get('clientId');
-
-        if (!clientId) {
+        if (!this.model.get('clientId')) {
             Espo.Ui.warning('Save your Client ID and Client Secret first.');
             return;
         }
 
-        const siteUrl = (this.getConfig().get('siteUrl') ?? window.location.origin).replace(/\/$/, '');
-
         Espo.Ajax.postRequest('XeroIntegration/initOAuth', {})
-            .then(data => this.openOAuthPopup(clientId, siteUrl, data.state))
+            .then(data => this.openOAuthPopup(data.authUrl))
             .catch(() => Espo.Ui.error('Could not initiate Xero OAuth. Check server logs.'));
     }
 
-    openOAuthPopup(clientId, siteUrl, state) {
-        const redirectUri = `${siteUrl}/?entryPoint=XeroOauthCallback`;
-
-        const authUrl =
-            'https://login.xero.com/identity/connect/authorize' +
-            '?response_type=code' +
-            '&client_id=' + encodeURIComponent(clientId) +
-            '&redirect_uri=' + encodeURIComponent(redirectUri) +
-            '&scope=' + encodeURIComponent('openid profile email accounting.transactions accounting.contacts offline_access') +
-            '&state=' + encodeURIComponent(state);
-
+    openOAuthPopup(authUrl) {
         const popup = window.open(authUrl, 'xero-oauth', 'width=650,height=720,left=200,top=100');
 
         if (!popup) {

@@ -5,6 +5,7 @@ namespace tests\unit\Espo\Modules\Xero;
 use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
 use Espo\Entities\Integration;
 use Espo\Entities\User;
 use Espo\Modules\Xero\Controllers\XeroIntegration;
@@ -15,6 +16,7 @@ class XeroIntegrationControllerTest extends TestCase
 {
     private EntityManager $em;
     private InjectableFactory $factory;
+    private Config $config;
     private User $user;
     private Request $request;
 
@@ -22,8 +24,29 @@ class XeroIntegrationControllerTest extends TestCase
     {
         $this->em = $this->createMock(EntityManager::class);
         $this->factory = $this->createMock(InjectableFactory::class);
+        $this->config = $this->createMock(Config::class);
         $this->user = $this->createMock(User::class);
         $this->request = $this->createMock(Request::class);
+
+        $this->config->method('get')->with('siteUrl')->willReturn('https://cake.local:8443');
+    }
+
+    private function makeController(): XeroIntegration
+    {
+        return new XeroIntegration($this->em, $this->factory, $this->config, $this->user);
+    }
+
+    private function makeIntegrationMock(string $clientId = 'TEST_CLIENT_ID'): Integration
+    {
+        $integration = $this->createMock(Integration::class);
+        $integration->method('get')->willReturnCallback(
+            fn (string $k) => match ($k) {
+                'clientId' => $clientId,
+                default    => null,
+            }
+        );
+        $integration->method('set')->willReturnSelf();
+        return $integration;
     }
 
     public function testThrowsForbiddenForNonAdminUser(): void
@@ -32,43 +55,44 @@ class XeroIntegrationControllerTest extends TestCase
 
         $this->expectException(Forbidden::class);
 
-        new XeroIntegration($this->em, $this->factory, $this->user);
+        $this->makeController();
     }
 
-    public function testInitOAuthReturnsState(): void
+    public function testInitOAuthReturnsAuthUrl(): void
     {
         $this->user->method('isAdmin')->willReturn(true);
 
-        $integration = $this->createMock(Integration::class);
-        $integration->method('set')->willReturnSelf();
-
         $this->em->method('getEntityById')
             ->with(Integration::ENTITY_TYPE, 'Xero')
-            ->willReturn($integration);
+            ->willReturn($this->makeIntegrationMock());
 
-        $controller = new XeroIntegration($this->em, $this->factory, $this->user);
-        $result = $controller->postActionInitOAuth($this->request);
+        $result = $this->makeController()->postActionInitOAuth($this->request);
 
-        $this->assertObjectHasProperty('state', $result);
-        $this->assertIsString($result->state);
-        $this->assertSame(32, strlen($result->state));
+        $this->assertObjectHasProperty('authUrl', $result);
+        $this->assertStringStartsWith('https://login.xero.com/identity/connect/authorize?', $result->authUrl);
+        $this->assertStringContainsString('client_id=TEST_CLIENT_ID', $result->authUrl);
+        $this->assertStringContainsString('code_challenge=', $result->authUrl);
+        $this->assertStringContainsString('code_challenge_method=S256', $result->authUrl);
+        $this->assertStringContainsString('redirect_uri=', $result->authUrl);
+        $this->assertStringContainsString('offline_access', $result->authUrl);
     }
 
     public function testInitOAuthStateIsCryptographicallyRandom(): void
     {
         $this->user->method('isAdmin')->willReturn(true);
 
-        $integration = $this->createMock(Integration::class);
-        $integration->method('set')->willReturnSelf();
+        $this->em->method('getEntityById')->willReturn($this->makeIntegrationMock());
 
-        $this->em->method('getEntityById')->willReturn($integration);
+        $controller = $this->makeController();
 
-        $controller = new XeroIntegration($this->em, $this->factory, $this->user);
+        $url1 = $controller->postActionInitOAuth($this->request)->authUrl;
+        $url2 = $controller->postActionInitOAuth($this->request)->authUrl;
 
-        $state1 = $controller->postActionInitOAuth($this->request)->state;
-        $state2 = $controller->postActionInitOAuth($this->request)->state;
+        parse_str(parse_url($url1, PHP_URL_QUERY), $p1);
+        parse_str(parse_url($url2, PHP_URL_QUERY), $p2);
 
-        $this->assertNotSame($state1, $state2);
+        $this->assertNotSame($p1['state'], $p2['state']);
+        $this->assertNotSame($p1['code_challenge'], $p2['code_challenge']);
     }
 
     public function testInitOAuthPersistsStateToIntegration(): void
@@ -76,6 +100,12 @@ class XeroIntegrationControllerTest extends TestCase
         $this->user->method('isAdmin')->willReturn(true);
 
         $integration = $this->createMock(Integration::class);
+        $integration->method('get')->willReturnCallback(
+            fn (string $k) => match ($k) {
+                'clientId' => 'TEST_CLIENT_ID',
+                default    => null,
+            }
+        );
 
         $savedState = null;
         $integration->method('set')->willReturnCallback(
@@ -90,9 +120,9 @@ class XeroIntegrationControllerTest extends TestCase
         $this->em->method('getEntityById')->willReturn($integration);
         $this->em->expects($this->once())->method('saveEntity')->with($integration);
 
-        $controller = new XeroIntegration($this->em, $this->factory, $this->user);
-        $result = $controller->postActionInitOAuth($this->request);
+        $result = $this->makeController()->postActionInitOAuth($this->request);
 
-        $this->assertSame($result->state, $savedState);
+        parse_str(parse_url($result->authUrl, PHP_URL_QUERY), $params);
+        $this->assertSame($params['state'], $savedState);
     }
 }

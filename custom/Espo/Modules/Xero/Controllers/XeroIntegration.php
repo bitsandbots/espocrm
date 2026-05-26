@@ -6,6 +6,7 @@ use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
 use Espo\Entities\Integration;
 use Espo\Entities\User;
 use Espo\Modules\Xero\Jobs\ReconcileXero;
@@ -16,9 +17,13 @@ use stdClass;
 
 class XeroIntegration
 {
+    private const AUTHORIZE_ENDPOINT = 'https://login.xero.com/identity/connect/authorize';
+    private const SCOPES = 'offline_access accounting.contacts accounting.invoices accounting.payments';
+
     public function __construct(
         private EntityManager $entityManager,
         private InjectableFactory $injectableFactory,
+        private Config $config,
         private User $user,
     ) {
         if (!$this->user->isAdmin()) {
@@ -44,13 +49,35 @@ class XeroIntegration
             throw new Error("Xero integration not found.");
         }
 
+        $clientId = $integration->get('clientId');
+
+        if (!$clientId) {
+            throw new Error("Xero Client ID not configured.");
+        }
+
         $state = bin2hex(random_bytes(16));
+        $codeVerifier = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+        $codeChallenge = rtrim(strtr(base64_encode(hash('sha256', $codeVerifier, true)), '+/', '-_'), '=');
 
         $integration->set('oauthState', $state);
+        $integration->set('oauthCodeVerifier', $codeVerifier);
         $this->entityManager->saveEntity($integration);
 
+        $siteUrl = rtrim($this->config->get('siteUrl') ?? '', '/');
+        $redirectUri = $siteUrl . '/?entryPoint=XeroOauthCallback';
+
+        $authUrl = self::AUTHORIZE_ENDPOINT . '?' . http_build_query([
+            'response_type'         => 'code',
+            'client_id'             => $clientId,
+            'redirect_uri'          => $redirectUri,
+            'scope'                 => self::SCOPES,
+            'state'                 => $state,
+            'code_challenge'        => $codeChallenge,
+            'code_challenge_method' => 'S256',
+        ]);
+
         $result = new stdClass();
-        $result->state = $state;
+        $result->authUrl = $authUrl;
 
         return $result;
     }

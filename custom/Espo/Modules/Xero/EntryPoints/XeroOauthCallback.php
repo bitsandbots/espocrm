@@ -101,6 +101,7 @@ class XeroOauthCallback implements EntryPoint
             $integration->set('tenantId', $tenantId);
             $integration->set('connectedAt', (new DateTime())->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT));
             $integration->set('oauthState', null);
+            $integration->set('oauthCodeVerifier', null);
 
             $this->entityManager->saveEntity($integration);
 
@@ -124,10 +125,13 @@ class XeroOauthCallback implements EntryPoint
 
         $ch = curl_init(self::TOKEN_ENDPOINT);
 
+        $codeVerifier = $integration->get('oauthCodeVerifier');
+
         $body = http_build_query([
             'grant_type' => 'authorization_code',
             'code' => $code,
             'redirect_uri' => $redirectUri,
+            'code_verifier' => $codeVerifier,
         ]);
 
         curl_setopt_array($ch, [
