@@ -228,10 +228,14 @@ custom/Espo/Modules/Xero/
 
 tests/unit/Espo/Modules/Xero/
 ├── ConflictResolverTest.php
+├── HooksSyncTest.php
+├── ReconcileXeroTest.php
+├── SyncFromXeroTest.php
 ├── XeroIntegrationControllerTest.php
 ├── XeroOauthCallbackTest.php
 ├── XeroServiceFieldMappingTest.php
-└── XeroServiceHttpTest.php
+├── XeroServiceHttpTest.php
+└── XeroServicePullTest.php
 ```
 
 ## API reference
