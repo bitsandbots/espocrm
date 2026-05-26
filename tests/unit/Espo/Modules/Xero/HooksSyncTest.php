@@ -4,9 +4,9 @@ namespace tests\unit\Espo\Modules\Xero;
 
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Log;
-use Espo\Modules\Xero\Hooks\Account\Sync as AccountSync;
-use Espo\Modules\Xero\Hooks\Contact\Sync as ContactSync;
-use Espo\Modules\Xero\Hooks\Invoice\Sync as InvoiceSync;
+use Espo\Modules\Xero\Hooks\Account\XeroSync as AccountSync;
+use Espo\Modules\Xero\Hooks\Contact\XeroSync as ContactSync;
+use Espo\Modules\Xero\Hooks\Invoice\XeroSync as InvoiceSync;
 use Espo\Modules\Xero\Services\XeroService;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\Option\SaveOptions;

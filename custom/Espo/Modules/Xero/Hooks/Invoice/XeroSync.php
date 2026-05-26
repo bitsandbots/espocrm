@@ -14,7 +14,7 @@ use Throwable;
 /**
  * @implements AfterSave<\Espo\Modules\QuickBooks\Entities\Invoice>
  */
-class Sync implements AfterSave
+class XeroSync implements AfterSave
 {
     public static int $order = 21;
 

@@ -92,7 +92,41 @@ for (const srcFile of qbFiles) {
     qbTranspiled++;
 }
 
-let count = result1.transpiled.length + result2.transpiled.length + qbTranspiled;
+const XERO_SRC = 'client/custom/modules/xero/src';
+const XERO_OUT = 'client/custom/modules/xero/lib/transpiled/src';
+
+let xeroTranspiled = 0;
+
+const xeroFiles = globSync(XERO_SRC + '/**/*.{js,ts}')
+    .map(f => f.replaceAll('\\', '/'))
+    .filter(f => !f.endsWith('.d.ts'))
+    .filter(f => !file || f === file.replaceAll('\\', '/'));
+
+for (const srcFile of xeroFiles) {
+    const rel = srcFile.slice(XERO_SRC.length + 1).replace(/\.(js|ts)$/, '');
+    const moduleId = `modules/xero/${rel}`;
+    const outDir = `${XERO_OUT}/${rel.split('/').slice(0, -1).join('/')}`;
+    const outFile = `${XERO_OUT}/${rel}.js`;
+
+    const result = babelCore.transformSync(fs.readFileSync(srcFile, 'utf-8'), {
+        presets: [['@babel/preset-env', {targets: {chrome: '90', safari: '16'}}]],
+        plugins: [
+            ...(srcFile.endsWith('.ts') ? ['@babel/plugin-transform-typescript'] : []),
+            '@babel/plugin-transform-modules-amd',
+            ['@babel/plugin-proposal-decorators', {version: '2023-11'}],
+        ],
+        moduleId,
+        sourceMaps: true,
+    });
+
+    fs.mkdirSync(outDir, {recursive: true});
+    const filePart = rel.split('/').slice(-1)[0] + '.js';
+    fs.writeFileSync(outFile, result.code + `\n//# sourceMappingURL=${filePart}.map ;`, 'utf-8');
+    fs.writeFileSync(outFile + '.map', result.map.toString(), 'utf-8');
+    xeroTranspiled++;
+}
+
+let count = result1.transpiled.length + result2.transpiled.length + qbTranspiled + xeroTranspiled;
 let copiedCount = result1.copied.length + result2.copied.length;
 
 console.log(`\n  transpiled: ${count}, copied: ${copiedCount}`)
