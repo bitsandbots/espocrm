@@ -55,13 +55,32 @@ class ReconcileXero implements JobDataLess
      */
     private function reconcileAccounts(XeroService $service): array
     {
+        $errors = [];
+
+        // Push accounts that never reached Xero (initial sync failed).
+        $unsynced = $this->entityManager
+            ->getRDBRepository('Account')
+            ->where(['xeroContactId=' => null])
+            ->limit(0, self::BATCH_SIZE)
+            ->find();
+
+        foreach ($unsynced as $account) {
+            try {
+                $service->upsertContact('Account', $account);
+            } catch (Throwable $e) {
+                $this->log->warning(
+                    "Xero reconcile Account '{$account->getId()}': " . $e->getMessage()
+                );
+                $errors[] = "Account {$account->getId()}: " . $e->getMessage();
+            }
+        }
+
+        // Re-push accounts modified since their last successful sync.
         $collection = $this->entityManager
             ->getRDBRepository('Account')
             ->where(['xeroContactId!=' => null])
             ->limit(0, self::BATCH_SIZE)
             ->find();
-
-        $errors = [];
 
         foreach ($collection as $account) {
             $syncedAt = $account->get('xeroSyncedAt');

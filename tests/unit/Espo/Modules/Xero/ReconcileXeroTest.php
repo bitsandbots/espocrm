@@ -286,21 +286,55 @@ class ReconcileXeroTest extends TestCase
         return $entity;
     }
 
-    /**
-     * Returns a properly-typed repository mock that yields $entities from find().
-     *
-     * @param array<Entity> $entities
-     */
-    private function makeRepo(array $entities): RDBRepository
+    public function testPushesUnsyncedAccountToXero(): void
     {
-        $collection = new EntityCollection($entities);
+        $integration = $this->makeIntegration();
 
-        $builder = $this->createMock(RDBSelectBuilder::class);
-        $builder->method('limit')->willReturnSelf();
-        $builder->method('find')->willReturn($collection);
+        $account = $this->makeEntity([
+            'xeroContactId' => null,
+            'xeroSyncedAt'  => null,
+            'modifiedAt'    => '2026-05-10 12:00:00',
+        ]);
 
+        $this->em->method('getEntityById')->willReturn($integration);
+        $this->em->method('getRDBRepository')
+            ->willReturnCallback(fn($type) => $this->makeRepo(
+                [],
+                $type === 'Account' ? [$account] : []
+            ));
+        $this->em->method('saveEntity');
+
+        $this->service->expects($this->once())->method('upsertContact')->with('Account', $account);
+
+        $this->makeJob()->run();
+    }
+
+    /**
+     * Returns a repository mock that routes where-clause queries to the right collection.
+     * Queries with 'xeroContactId=' (null check) return $unsyncedEntities;
+     * all other queries return $syncedEntities.
+     *
+     * @param array<Entity> $syncedEntities
+     * @param array<Entity> $unsyncedEntities
+     */
+    private function makeRepo(array $syncedEntities, array $unsyncedEntities = []): RDBRepository
+    {
         $repo = $this->createMock(RDBRepository::class);
-        $repo->method('where')->willReturn($builder);
+        $repo->method('where')->willReturnCallback(
+            function (array $where) use ($syncedEntities, $unsyncedEntities) {
+                $entities = array_key_exists('xeroContactId=', $where)
+                    ? $unsyncedEntities
+                    : $syncedEntities;
+
+                $collection = new EntityCollection($entities);
+
+                $builder = $this->createMock(RDBSelectBuilder::class);
+                $builder->method('limit')->willReturnSelf();
+                $builder->method('find')->willReturn($collection);
+
+                return $builder;
+            }
+        );
 
         return $repo;
     }
