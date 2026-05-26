@@ -287,7 +287,7 @@ class XeroServiceHttpTest extends TestCase
 
         $this->assertStringContainsString('Payments', $capturedUrl);
         $decoded = rawurldecode($capturedUrl);
-        $this->assertStringContainsString('DateTime(2026,01,15', $decoded);
+        $this->assertStringContainsString('DateTime(2026,1,15', $decoded);
     }
 
     public function testPullContactsSinceSendsIfModifiedSinceHeader(): void

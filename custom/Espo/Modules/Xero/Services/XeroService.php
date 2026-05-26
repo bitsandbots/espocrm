@@ -180,7 +180,12 @@ class XeroService
             throw new Error("Xero: cURL request failed for $method $url.");
         }
 
-        $result = Json::decode($raw, true);
+        try {
+            $result = Json::decode($raw, true);
+        } catch (\JsonException $e) {
+            $preview = substr($raw, 0, 200);
+            throw new Error("Xero API error ($method $url): non-JSON response (HTTP $httpCode): $preview");
+        }
 
         if ($httpCode < 200 || $httpCode >= 300) {
             $detail = $result['Detail'] ?? ($result['Message'] ?? "HTTP $httpCode");
@@ -452,7 +457,11 @@ class XeroService
     public function pullPaymentsSince(string $sinceDate): void
     {
         [$y, $m, $d] = explode('-', $sinceDate);
-        $filter = urlencode("Date>=DateTime($y,$m,$d,0,0,0)&Status=AUTHORISED");
+        // Xero where syntax: && for AND, == for string equality, no leading zeros in DateTime args.
+        $y = (int) $y;
+        $m = (int) $m;
+        $d = (int) $d;
+        $filter = urlencode("Date>=DateTime($y,$m,$d,0,0,0)&&Status==\"AUTHORISED\"");
         $url = $this->apiUrl("Payments?where=$filter");
 
         $result = $this->request('GET', $url);
