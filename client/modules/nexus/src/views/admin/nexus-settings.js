@@ -1,4 +1,4 @@
-define(['view'], function (View) {
+define('nexus:views/admin/nexus-settings', ['view'], function (View) {
     return class NexusSettingsView extends View {
 
         templateContent = `

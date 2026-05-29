@@ -32,6 +32,8 @@ scriptEl.setAttribute('type', 'application/json');
 scriptEl.setAttribute('data-name', 'loader-params');
 scriptEl.textContent = JSON.stringify({
     basePath: '../../',
+    internalModuleList: ['nexus'],
+    transpiledModuleList: [],
     libsConfig: {
         "jquery": {
             "exposeAs": "$"

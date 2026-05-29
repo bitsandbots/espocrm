@@ -32,6 +32,9 @@
         "client/lib/transpiled/src/language.js",
         "client/lib/transpiled/src/models/user.js",
         "client/lib/transpiled/src/email-helper.js",
+        "frontend/test/stubs/nexus-view-deps.js",
+        "client/modules/nexus/src/views/admin/nexus-settings.js",
+        "client/modules/nexus/src/views/panels/nexus-assistant.js",
         "frontend/test/stubs/file-field-view-deps.js",
         "client/lib/transpiled/src/views/fields/file.js"
     ],

@@ -1,4 +1,4 @@
-define(['view'], function (View) {
+define('nexus:views/panels/nexus-assistant', ['view'], function (View) {
     return class NexusAssistantView extends View {
 
         templateContent = `
