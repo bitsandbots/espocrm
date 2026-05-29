@@ -3,6 +3,9 @@
         "NEXUS Integration": "NEXUS Integration",
         "NEXUS Settings": "NEXUS Settings"
     },
+    "descriptions": {
+        "nexusSettings": "Configure NEXUS AI platform connection, credentials, and RAG ingestion."
+    },
     "keywords": {
         "nexusSettings": "nexus ai agent chat rag settings url credentials"
     }
