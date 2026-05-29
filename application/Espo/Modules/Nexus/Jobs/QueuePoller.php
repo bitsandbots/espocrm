@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Espo\Modules\Nexus\Jobs;
 
 use Espo\Core\Job\JobDataLess;
-use Espo\Core\Log\Log;
+use Espo\Core\Utils\Log;
 use Espo\Modules\Nexus\Services\NexusService;
 
 /**
