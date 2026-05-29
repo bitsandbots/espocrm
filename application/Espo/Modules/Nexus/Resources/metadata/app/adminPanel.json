@@ -7,7 +7,7 @@
             {
                 "url": "#Admin/nexusSettings",
                 "label": "NEXUS Settings",
-                "description": "Configure NEXUS AI platform connection, credentials, and RAG ingestion.",
+                "description": "nexusSettings",
                 "iconClass": "fas fa-cog",
                 "view": "nexus:views/admin/nexus-settings"
             }
