@@ -66,7 +66,7 @@ class AgentClient
                 'Content-Type: application/json',
                 'Accept: application/json',
             ],
-            CURLOPT_TIMEOUT        => 90,
+            CURLOPT_TIMEOUT        => 180,
             CURLOPT_CONNECTTIMEOUT => 5,
         ]);
 

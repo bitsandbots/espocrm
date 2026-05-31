@@ -56,8 +56,8 @@ class NexusGateway
     /** POST /api/v1/nexus/chat */
     public function postActionChat(Request $request, Response $response): void
     {
-        // Ollama inference can take 60-90s; override the default 30s PHP limit.
-        set_time_limit(120);
+        // Ollama inference on Pi can take 2-3 min; override the default 30s PHP limit.
+        set_time_limit(200);
 
         $data      = (array) $request->getParsedBody();
         $message   = trim((string) ($data['message'] ?? ''));
