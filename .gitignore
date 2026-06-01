@@ -41,3 +41,4 @@ client/modules/crm/lib/*
 # Local runtime / build artifacts
 /data/espocrm.db
 /releases/
+.claude/
