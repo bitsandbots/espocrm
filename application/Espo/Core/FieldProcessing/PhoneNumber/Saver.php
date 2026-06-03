@@ -34,6 +34,7 @@ use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\PhoneNumber;
 use Espo\ORM\Name\Attribute;
+use Espo\ORM\Repository\RDBRelation;
 use Espo\Repositories\PhoneNumber as PhoneNumberRepository;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -427,21 +428,7 @@ class Saver implements SaverInterface
             return;
         }
 
-        $fetchedNumber = $entity->getFetched(self::ATTR_PHONE_NUMBER);
-
-        if (!$fetchedNumber) {
-            return;
-        }
-
-        $phoneNumberOld = $this->getByNumber($fetchedNumber);
-
-        if (!$phoneNumberOld) {
-            return;
-        }
-
-        $entityRepository
-            ->getRelation($entity, 'phoneNumbers')
-            ->unrelate($phoneNumberOld, [SaveOption::SKIP_HOOKS => true]);
+        $this->storePrimaryEmpty($entity);
     }
 
     private function getByNumber(string $number): ?PhoneNumber
@@ -590,5 +577,31 @@ class Saver implements SaverInterface
 
         $this->loader->process($entity, LoeaderParams::create());
         $entity->setFetched(self::ATTR_PHONE_NUMBER_DATA, $previous);
+    }
+
+    private function storePrimaryEmpty(Entity $entity): void
+    {
+        $fetchedNumber = $entity->getFetched(self::ATTR_PHONE_NUMBER);
+
+        if (!$fetchedNumber) {
+            return;
+        }
+
+        /** @var RDBRelation<PhoneNumber> $relation */
+        $relation = $this->entityManager->getRelation($entity, 'phoneNumbers');
+
+        $phoneNumberOld = $this->getByNumber($fetchedNumber);
+
+        if ($phoneNumberOld) {
+            $relation->unrelate($phoneNumberOld, [SaveOption::SKIP_HOOKS => true]);
+        }
+
+        $one = $relation->findOne();
+
+        if (!$one) {
+            return;
+        }
+
+        $relation->updateColumns($one, ['primary' => true]);
     }
 }

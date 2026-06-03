@@ -1,6 +1,6 @@
 {
   "name": "espocrm",
-  "version": "9.3.7",
+  "version": "9.3.8",
   "description": "Open-source CRM.",
   "repository": {
     "type": "git",
@@ -71,7 +71,7 @@
     "bootstrap": "github:yurikuzn/espo-bootstrap#0.1.2",
     "bootstrap-colorpicker": "^2.5.2",
     "bootstrap-datepicker": "^1.9.0",
-    "bullbone": "github:espocrm/bullbone#1.5.4",
+    "bullbone": "github:espocrm/bullbone#1.5.5",
     "cronstrue": "^1.114.0",
     "cropper": "^0.7.9",
     "devbridge-autocomplete": "^1.4.11",
