@@ -1,0 +1,6 @@
+{
+    "fields": {
+        "cCallType": "Call Type",
+        "cOutcome": "Outcome"
+    }
+}

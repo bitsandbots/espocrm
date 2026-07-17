@@ -1,0 +1,10 @@
+{
+    "links": {
+        "casesAsDeliveryPartner": {
+            "type": "hasMany",
+            "entity": "Case",
+            "foreign": "cDeliveryPartner",
+            "layoutRelationshipsDisabled": true
+        }
+    }
+}

@@ -1,0 +1,87 @@
+{
+    "fields": {
+        "cIcpProfile": {
+            "type": "enum",
+            "options": [
+                "0 — The AI-Risk-Aware Organization",
+                "1 — The M365-Embedded Nonprofit",
+                "2 — The Google Workspace Nonprofit",
+                "3 — The Sovereignty-Required Service Org",
+                "4 — The Values-Governed Organization",
+                "5 — The Organization in Transition",
+                "6 — The Mutual Aid Network",
+                "7 — The CLT or Housing Organization",
+                "Bridge",
+                "TBD"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cDeliveryTrack": {
+            "type": "enum",
+            "options": [
+                "Microsoft 365",
+                "Google Workspace",
+                "Sovereign Stack",
+                "AI Governance Only",
+                "Mixed",
+                "Bridge",
+                "TBD"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cDataSensitivity": {
+            "type": "enum",
+            "options": [
+                "Standard",
+                "Elevated (PII)",
+                "High (PHI / Sensitive Populations)"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cDisqualificationIndicators": {
+            "type": "multiEnum",
+            "storeArrayValues": true,
+            "options": [
+                "Budget mismatch, no financing path",
+                "No decision-maker by 2nd conversation",
+                "\"Get us off Platform X\" with no diagnosis",
+                "Pattern of consultant churn (3+ prior)",
+                "Hostile/evasive about access during Map",
+                "No sustainable operations path",
+                "Mission incompatibility",
+                "Active legal dispute re: technology",
+                "Unrealistic timeline (no room for Map)"
+            ],
+            "isCustom": true
+        },
+        "cMissionFitStatus": {
+            "type": "enum",
+            "options": [
+                "Qualified",
+                "Disqualified",
+                "Under Review"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cLeadSourceDetail": {
+            "type": "enum",
+            "options": [
+                "Open-Source Tool (LogFix / NetWatch / SiteEdit)",
+                "Referral — Partner",
+                "Referral — Client",
+                "Blog / Content",
+                "Conference / Event",
+                "NTEN / TechSoup Ecosystem",
+                "Direct Outreach",
+                "Microsoft Partner Referral",
+                "Other"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        }
+    }
+}

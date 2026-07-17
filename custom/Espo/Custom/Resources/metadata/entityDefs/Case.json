@@ -1,0 +1,72 @@
+{
+    "fields": {
+        "cEngagementStatus": {
+            "type": "enum",
+            "options": [
+                "Scoping",
+                "In Progress",
+                "Sustain",
+                "Closed",
+                "On Hold"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cCurrentPhase": {
+            "type": "enum",
+            "options": [
+                "Map",
+                "Streamline",
+                "Extend",
+                "Sustain"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cLaunchDate": {
+            "type": "date",
+            "isCustom": true
+        },
+        "cDeliveryPartner": {
+            "type": "linkMultiple",
+            "isCustom": true
+        },
+        "cDeliveryTrack": {
+            "type": "enum",
+            "options": [
+                "Microsoft 365",
+                "Google Workspace",
+                "Sovereign Stack",
+                "AI Governance Only",
+                "Mixed",
+                "Bridge"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cEngagementTier": {
+            "type": "enum",
+            "options": [
+                "Tier 1 — Assessment",
+                "Tier 2 — Implementation",
+                "Tier 3 — Transformation",
+                "Retainer"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cRetainerReminderSent": {
+            "notNull": true,
+            "type": "bool",
+            "isCustom": true
+        }
+    },
+    "links": {
+        "cDeliveryPartner": {
+            "type": "hasMany",
+            "entity": "User",
+            "foreign": "casesAsDeliveryPartner",
+            "layoutRelationshipsDisabled": true
+        }
+    }
+}

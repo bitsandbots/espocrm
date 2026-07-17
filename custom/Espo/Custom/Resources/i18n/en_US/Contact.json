@@ -1,0 +1,8 @@
+{
+    "fields": {
+        "cRoleAtOrg": "Role at Org",
+        "cIsDecisionMaker": "Decision Maker",
+        "cIsGrantWriter": "Grant Writer",
+        "cTechComfortLevel": "Tech Comfort Level"
+    }
+}

@@ -1,0 +1,36 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [{"name": "name"}, {"name": "website"}],
+            [{"name": "emailAddress"}, {"name": "phoneNumber"}],
+            [{"name": "billingAddress"}, {"name": "shippingAddress"}]
+        ]
+    },
+    {
+        "label": "Details",
+        "rows": [
+            [{"name": "type"}, {"name": "industry"}],
+            [{"name": "description", "fullWidth": true}]
+        ]
+    },
+    {
+        "label": "CoreConduit Profile",
+        "rows": [
+            [{"name": "cIcpProfile"}, {"name": "cDeliveryTrack"}],
+            [{"name": "cSovereigntyJourneyStage"}, {"name": "cMissionFitStatus"}],
+            [{"name": "cOrgType"}, {"name": "cGovernanceModel"}],
+            [{"name": "cAnnualBudget"}, {"name": "cFinancingPathPreference"}],
+            [{"name": "cStaffCount"}, {"name": "cVolunteerCount"}],
+            [{"name": "cServiceDomain"}, {"name": "cDataSensitivity"}],
+            [{"name": "cRetainerActive"}, {"name": "cLastAssessmentDate"}]
+        ]
+    },
+    {
+        "label": "Microsoft / Tech Stack",
+        "rows": [
+            [{"name": "cMicrosoftEligible"}, {"name": "cAzureGrantActive"}],
+            [{"name": "cCurrentM365Plan"}, {"name": "cCurrentCrm"}]
+        ]
+    }
+]

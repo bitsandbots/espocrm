@@ -1,0 +1,24 @@
+[
+    {
+        "label": "",
+        "rows": [
+            [{"name": "name"}, {"name": "account"}],
+            [{"name": "stage"}, {"name": "amount"}],
+            [{"name": "probability"}, {"name": "closeDate"}],
+            [{"name": "contacts"}, {"name": "leadSource"}],
+            [{"name": "description"}]
+        ]
+    },
+    {
+        "label": "CoreConduit Engagement",
+        "rows": [
+            [{"name": "cEngagementTier"}, {"name": "cEngagementType"}],
+            [{"name": "cDeliveryTrack"}, {"name": "cIcpProfile"}],
+            [{"name": "cSovereigntyJourneyStageStart"}, {"name": "cSovereigntyJourneyStageEnd"}],
+            [{"name": "cSovereigntyJourneyStageDelta"}, false],
+            [{"name": "cFinancingPath"}, {"name": "cRetainerDecision"}],
+            [{"name": "cProposalAnchorTier"}, {"name": "cEstimatedHours"}],
+            [{"name": "cLeadSource2"}, {"name": "cLostReason"}]
+        ]
+    }
+]

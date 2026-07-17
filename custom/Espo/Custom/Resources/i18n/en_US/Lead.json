@@ -1,0 +1,10 @@
+{
+    "fields": {
+        "cIcpProfile": "ICP Profile",
+        "cDeliveryTrack": "Delivery Track",
+        "cDataSensitivity": "Data Sensitivity",
+        "cDisqualificationIndicators": "Disqualification Indicators",
+        "cMissionFitStatus": "Mission Fit Status",
+        "cLeadSourceDetail": "Lead Source (Detail)"
+    }
+}

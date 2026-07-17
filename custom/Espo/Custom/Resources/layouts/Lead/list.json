@@ -1,0 +1,10 @@
+[
+    {"name": "name", "link": true},
+    {"name": "status", "width": 13},
+    {"name": "cIcpProfile", "width": 18},
+    {"name": "cMissionFitStatus", "width": 14},
+    {"name": "emailAddress", "notSortable": true, "width": 16, "hidden": true},
+    {"name": "source", "notSortable": true, "width": 12, "hidden": true},
+    {"name": "assignedUser", "width": 12},
+    {"name": "createdAt", "width": 10}
+]

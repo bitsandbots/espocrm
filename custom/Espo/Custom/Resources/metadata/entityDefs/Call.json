@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "cCallType": {
+            "type": "enum",
+            "options": [
+                "Initial Qualification",
+                "Assessment Kickoff",
+                "Assessment Debrief",
+                "Proposal Discussion",
+                "Retainer Conversation",
+                "Stewardship Review",
+                "Other"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cOutcome": {
+            "type": "enum",
+            "options": [
+                "Moved to Next Stage",
+                "Needs Follow-up",
+                "Disqualified",
+                "Other"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        }
+    }
+}

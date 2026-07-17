@@ -1,0 +1,11 @@
+{
+    "fields": {
+        "cEngagementStatus": "Engagement Status",
+        "cCurrentPhase": "Current Phase",
+        "cLaunchDate": "Launch Date",
+        "cDeliveryPartner": "Delivery Partner",
+        "cDeliveryTrack": "Delivery Track",
+        "cEngagementTier": "Engagement Tier",
+        "cRetainerReminderSent": "Retainer Reminder Sent"
+    }
+}

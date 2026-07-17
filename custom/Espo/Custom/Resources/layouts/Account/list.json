@@ -1,0 +1,7 @@
+[
+    {"name": "name", "link": true},
+    {"name": "cIcpProfile", "width": 18},
+    {"name": "cDeliveryTrack", "width": 16},
+    {"name": "type", "width": 14},
+    {"name": "billingAddressCountry", "width": 12}
+]

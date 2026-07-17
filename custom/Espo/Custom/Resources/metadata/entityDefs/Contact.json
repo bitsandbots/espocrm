@@ -1,0 +1,39 @@
+{
+    "fields": {
+        "cRoleAtOrg": {
+            "type": "enum",
+            "options": [
+                "Executive Director",
+                "Development Director",
+                "Finance Director",
+                "Program Director",
+                "IT / Operations",
+                "Board Member",
+                "Volunteer Coordinator",
+                "Other"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cIsDecisionMaker": {
+            "notNull": true,
+            "type": "bool",
+            "isCustom": true
+        },
+        "cIsGrantWriter": {
+            "notNull": true,
+            "type": "bool",
+            "isCustom": true
+        },
+        "cTechComfortLevel": {
+            "type": "enum",
+            "options": [
+                "Low",
+                "Moderate",
+                "High"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        }
+    }
+}

@@ -1,0 +1,29 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [{"name": "name"}, {"name": "accountName"}],
+            [{"name": "emailAddress"}, {"name": "phoneNumber"}],
+            [{"name": "title"}, {"name": "website"}],
+            [{"name": "address"}, false]
+        ]
+    },
+    {
+        "label": "Details",
+        "rows": [
+            [{"name": "status"}, {"name": "source"}],
+            [{"name": "opportunityAmount"}, {"name": "campaign"}],
+            [{"name": "industry"}, false],
+            [{"name": "description", "fullWidth": true}]
+        ]
+    },
+    {
+        "label": "CoreConduit Qualification",
+        "rows": [
+            [{"name": "cIcpProfile"}, {"name": "cDeliveryTrack"}],
+            [{"name": "cMissionFitStatus"}, {"name": "cDataSensitivity"}],
+            [{"name": "cLeadSourceDetail"}, false],
+            [{"name": "cDisqualificationIndicators", "fullWidth": true}]
+        ]
+    }
+]

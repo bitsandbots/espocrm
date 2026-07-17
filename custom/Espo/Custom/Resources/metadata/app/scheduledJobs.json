@@ -1,0 +1,7 @@
+{
+    "RetainerDecisionReminder": {
+        "name": "Retainer Decision Reminder",
+        "jobClassName": "Espo\\Custom\\Jobs\\RetainerDecisionReminder",
+        "scheduling": "0 8 * * *"
+    }
+}

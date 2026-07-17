@@ -1,0 +1,191 @@
+{
+    "fields": {
+        "cProposalAnchorTier": {
+            "type": "enum",
+            "options": [
+                "Core",
+                "Recommended",
+                "Comprehensive"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cEngagementTier": {
+            "type": "enum",
+            "options": [
+                "Tier 1 — Assessment",
+                "Tier 2 — Implementation",
+                "Tier 3 — Transformation",
+                "Retainer"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cEngagementType": {
+            "type": "enum",
+            "options": [
+                "AI Governance Assessment",
+                "PII Mitigation Implementation",
+                "AI Governance Retainer",
+                "M365 Tech Health Assessment",
+                "M365 Integration Package",
+                "M365 Transformation Engagement",
+                "M365 Care Retainer",
+                "Google Workspace Tech Health Assessment",
+                "Google Workspace Integration Package",
+                "Google Workspace Care Retainer",
+                "Sovereignty Posture Assessment",
+                "Sovereign Stack Setup",
+                "Stack Extensions",
+                "Sovereign Stewardship Retainer",
+                "Sovereignty Roadmap Advisory Retainer",
+                "Grant Financing"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cDeliveryTrack": {
+            "type": "enum",
+            "options": [
+                "Microsoft 365",
+                "Google Workspace",
+                "Sovereign Stack",
+                "AI Governance Only",
+                "Mixed",
+                "Bridge"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cIcpProfile": {
+            "type": "enum",
+            "options": [
+                "0 — The AI-Risk-Aware Organization",
+                "1 — The M365-Embedded Nonprofit",
+                "2 — The Google Workspace Nonprofit",
+                "3 — The Sovereignty-Required Service Org",
+                "4 — The Values-Governed Organization",
+                "5 — The Organization in Transition",
+                "6 — The Mutual Aid Network",
+                "7 — The CLT or Housing Organization",
+                "Bridge"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cSovereigntyJourneyStageStart": {
+            "type": "enum",
+            "options": [
+                "1 — Aware",
+                "2 — Governed",
+                "3 — Selective",
+                "4 — Hybrid",
+                "5 — Sovereign"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cSovereigntyJourneyStageEnd": {
+            "type": "enum",
+            "options": [
+                "1 — Aware",
+                "2 — Governed",
+                "3 — Selective",
+                "4 — Hybrid",
+                "5 — Sovereign"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cSovereigntyJourneyStageDelta": {
+            "type": "int",
+            "readOnly": true,
+            "isCustom": true
+        },
+        "cFinancingPath": {
+            "type": "enum",
+            "options": [
+                "Operating Budget",
+                "Grant-Financed",
+                "At-Cost",
+                "Pro Bono"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cRetainerDecision": {
+            "type": "enum",
+            "options": [
+                "Active Retainer",
+                "Formally Closed",
+                "Pending"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cLostReason": {
+            "type": "enum",
+            "options": [
+                "Budget",
+                "Competitor",
+                "Timing",
+                "Not a Fit",
+                "No Decision"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cLeadSource2": {
+            "type": "enum",
+            "options": [
+                "Open-Source Tool (LogFix / NetWatch / SiteEdit)",
+                "Referral — Partner",
+                "Referral — Client",
+                "Blog / Content",
+                "Conference / Event",
+                "NTEN / TechSoup Ecosystem",
+                "Direct Outreach",
+                "Microsoft Partner Referral",
+                "Other"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cEstimatedHours": {
+            "type": "int",
+            "isCustom": true
+        },
+        "stage": {
+            "options": [
+                "Inquiry",
+                "Qualification",
+                "Discovery — Map",
+                "Proposal Sent",
+                "Proposal Review",
+                "Contract Signed",
+                "In Delivery",
+                "Closed Won",
+                "Closed Lost"
+            ],
+            "probabilityMap": {
+                "Inquiry": 5,
+                "Qualification": 15,
+                "Discovery — Map": 30,
+                "Proposal Sent": 50,
+                "Proposal Review": 65,
+                "Contract Signed": 90,
+                "In Delivery": 95,
+                "Closed Won": 100,
+                "Closed Lost": 0
+            },
+            "style": {
+                "Proposal Sent": "primary",
+                "Proposal Review": "primary",
+                "Contract Signed": "warning",
+                "In Delivery": "warning",
+                "Closed Won": "success",
+                "Closed Lost": "info"
+            }
+        }
+    }
+}

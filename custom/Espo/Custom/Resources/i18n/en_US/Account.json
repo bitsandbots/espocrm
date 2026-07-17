@@ -1,0 +1,24 @@
+{
+    "fields": {
+        "cOrgType": "Org Type",
+        "cAnnualBudget": "Annual Budget",
+        "cAnnualBudgetCurrency": "Annual Budget (Currency)",
+        "cAnnualBudgetConverted": "Annual Budget (Converted)",
+        "cStaffCount": "Staff Count",
+        "cVolunteerCount": "Volunteer Count",
+        "cServiceDomain": "Service Domain",
+        "cDataSensitivity": "Data Sensitivity",
+        "cMicrosoftEligible": "Microsoft Nonprofit Eligible",
+        "cCurrentM365Plan": "Current M365 Plan",
+        "cCurrentCrm": "Current CRM",
+        "cAzureGrantActive": "Azure Grant Active",
+        "cIcpProfile": "ICP Profile",
+        "cDeliveryTrack": "Delivery Track",
+        "cSovereigntyJourneyStage": "Sovereignty Journey Stage",
+        "cGovernanceModel": "Governance Model",
+        "cMissionFitStatus": "Mission Fit Status",
+        "cFinancingPathPreference": "Financing Path Preference",
+        "cRetainerActive": "Retainer Active",
+        "cLastAssessmentDate": "Last Assessment Date"
+    }
+}

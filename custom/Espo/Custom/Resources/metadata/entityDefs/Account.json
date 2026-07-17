@@ -1,0 +1,169 @@
+{
+    "fields": {
+        "cOrgType": {
+            "type": "enum",
+            "options": [
+                "501(c)(3)",
+                "501(c)(4)",
+                "Foundation",
+                "Faith-Based",
+                "Government",
+                "Other"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cAnnualBudget": {
+            "type": "currency",
+            "isCustom": true
+        },
+        "cStaffCount": {
+            "type": "int",
+            "isCustom": true
+        },
+        "cVolunteerCount": {
+            "type": "int",
+            "isCustom": true
+        },
+        "cServiceDomain": {
+            "type": "multiEnum",
+            "storeArrayValues": true,
+            "options": [
+                "Youth Services",
+                "Domestic Violence",
+                "Reproductive Health",
+                "Food Security",
+                "Immigration",
+                "Faith-Based Social Justice",
+                "Housing",
+                "Health",
+                "Environmental",
+                "Other"
+            ],
+            "isCustom": true
+        },
+        "cDataSensitivity": {
+            "type": "enum",
+            "options": [
+                "Standard",
+                "Elevated (PII)",
+                "High (PHI / Sensitive Populations)"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cMicrosoftEligible": {
+            "notNull": true,
+            "type": "bool",
+            "isCustom": true
+        },
+        "cCurrentM365Plan": {
+            "type": "enum",
+            "options": [
+                "None",
+                "Business Basic",
+                "Business Standard",
+                "Business Premium",
+                "E1",
+                "E3",
+                "E5",
+                "Developer"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cCurrentCrm": {
+            "type": "varchar",
+            "isCustom": true
+        },
+        "cAzureGrantActive": {
+            "notNull": true,
+            "type": "bool",
+            "isCustom": true
+        },
+        "cIcpProfile": {
+            "type": "enum",
+            "options": [
+                "0 — The AI-Risk-Aware Organization",
+                "1 — The M365-Embedded Nonprofit",
+                "2 — The Google Workspace Nonprofit",
+                "3 — The Sovereignty-Required Service Org",
+                "4 — The Values-Governed Organization",
+                "5 — The Organization in Transition",
+                "6 — The Mutual Aid Network",
+                "7 — The CLT or Housing Organization",
+                "Bridge"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cDeliveryTrack": {
+            "type": "enum",
+            "options": [
+                "Microsoft 365",
+                "Google Workspace",
+                "Sovereign Stack",
+                "AI Governance Only",
+                "Mixed",
+                "Bridge"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cSovereigntyJourneyStage": {
+            "type": "enum",
+            "options": [
+                "1 — Aware",
+                "2 — Governed",
+                "3 — Selective",
+                "4 — Hybrid",
+                "5 — Sovereign"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cGovernanceModel": {
+            "type": "multiEnum",
+            "storeArrayValues": true,
+            "options": [
+                "Board-Governed 501(c)(3)",
+                "Worker Cooperative",
+                "Community Land Trust",
+                "Unincorporated Network",
+                "Mutual Aid Network",
+                "Fiscal-Sponsored"
+            ],
+            "isCustom": true
+        },
+        "cMissionFitStatus": {
+            "type": "enum",
+            "options": [
+                "Qualified",
+                "Disqualified",
+                "Under Review"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cFinancingPathPreference": {
+            "type": "enum",
+            "options": [
+                "Operating Budget",
+                "Grant-Financed",
+                "At-Cost",
+                "Pro Bono"
+            ],
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cRetainerActive": {
+            "notNull": true,
+            "type": "bool",
+            "isCustom": true
+        },
+        "cLastAssessmentDate": {
+            "type": "date",
+            "isCustom": true
+        }
+    }
+}

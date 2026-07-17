@@ -1,0 +1,18 @@
+{
+    "fields": {
+        "cProposalAnchorTier": "Proposal Anchor Tier",
+        "cEngagementTier": "Engagement Tier",
+        "cEngagementType": "Engagement Type",
+        "cDeliveryTrack": "Delivery Track",
+        "cIcpProfile": "ICP Profile",
+        "cSovereigntyJourneyStageStart": "Sovereignty Journey Stage (Start)",
+        "cSovereigntyJourneyStageEnd": "Sovereignty Journey Stage (End)",
+        "cSovereigntyJourneyStageDelta": "Sovereignty Journey Stage Delta",
+        "cFinancingPath": "Financing Path",
+        "cRetainerDecision": "Retainer Decision",
+        "cLostReason": "Lost Reason",
+        "cLeadSource2": "Lead Source (Detail)",
+        "cEstimatedHours": "Estimated Hours",
+        "stage": "Stage"
+    }
+}

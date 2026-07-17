@@ -1,0 +1,10 @@
+[
+    {"name": "name", "link": true},
+    {"name": "account", "width": 18},
+    {"name": "stage", "width": 13},
+    {"name": "cEngagementTier", "width": 14},
+    {"name": "cDeliveryTrack", "width": 14},
+    {"name": "assignedUser", "width": 10},
+    {"name": "closeDate", "width": 9, "hidden": true},
+    {"name": "amount", "align": "right", "width": 10}
+]

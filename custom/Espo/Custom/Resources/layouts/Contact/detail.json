@@ -1,0 +1,18 @@
+[
+    {
+        "label": "",
+        "rows": [
+            [{"name": "name"}, {"name": "accounts"}],
+            [{"name": "emailAddress"}, {"name": "phoneNumber"}],
+            [{"name": "address"}, false],
+            [{"name": "description", "fullWidth": true}]
+        ]
+    },
+    {
+        "label": "CoreConduit Profile",
+        "rows": [
+            [{"name": "cRoleAtOrg"}, {"name": "cIsDecisionMaker"}],
+            [{"name": "cIsGrantWriter"}, {"name": "cTechComfortLevel"}]
+        ]
+    }
+]

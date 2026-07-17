@@ -31,6 +31,9 @@
 /custom/Espo/Custom/*
 /custom/Espo/Modules/*
 !/custom/Espo/Custom/.htaccess
+!/custom/Espo/Custom/Hooks
+!/custom/Espo/Custom/Jobs
+!/custom/Espo/Custom/Resources
 !/custom/Espo/Modules/.htaccess
 /install/config.php
 
